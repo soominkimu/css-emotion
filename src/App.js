@@ -3,7 +3,8 @@ import './App.css';
 
 // this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
 /** @jsx jsx */
-import { jsx, css, keyframes } from '@emotion/core'
+import { jsx, css, keyframes, Global } from '@emotion/core'
+import { ThemeProvider } from "emotion-theming";
 
 const style = css`
   color: hotpink;
@@ -20,9 +21,7 @@ const anotherStyle = css({
   textDecoration: 'underline'
 })
 
-const AnotherComponent = () => (
-  <div css={anotherStyle}>Some text with an underline.</div>
-);
+const AnotherComponent = () => <div css={anotherStyle}>Some text with an underline.</div>;
 
 const DemoObjectStyles = () => (
   <div
@@ -106,6 +105,31 @@ const DemoKeyframes = () => (
   </div>
 );
 
+
+// The CSS Prop
+// ThemeProvider
+const Header = props => <h1
+    css={theme => ({
+      fontSize: 48,
+      fontWeight: 600,
+      color: theme.colors.header
+    })}
+    {...props}>
+    {props.children}
+  </h1>;
+
+const BodyText = props => <p
+    css={theme => ({
+      color: theme.colors.primary,
+      fontFamily: "sans-serif",
+      fontSize: 18,
+      "&:hover" : {
+        color: theme.colors.hover
+      }
+    })}
+    {...props}
+  />;
+
 function App() {
   return (
     <div className="App">
@@ -117,6 +141,36 @@ function App() {
       <DemoStringStyles />
       <DemoComposition />
       <DemoKeyframes />
+      <ThemeProvider
+        theme={{
+          colors: {
+            primary: "hotpink",
+            hover: "crimson",
+            header: "dimgray"
+          }
+        }}
+      >
+        <div>
+          <Header>Header Title</Header>
+          <BodyText>Hello Emotion 10!!!</BodyText>
+        </div>
+      </ThemeProvider>
+      <Global
+        styles={{
+          html: {
+            color: "brown",
+            fontFamily: "sans-serif"
+          }
+        }}
+      />
+      <Global
+        styles={css`
+          body {
+            padding: 0;
+          }
+        `}
+      />
+      <h1>Hello Emotion 10!!!</h1>
     </div>
   );
 }
